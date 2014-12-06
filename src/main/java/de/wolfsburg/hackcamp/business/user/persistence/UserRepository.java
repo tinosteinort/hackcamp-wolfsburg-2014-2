@@ -2,6 +2,7 @@ package de.wolfsburg.hackcamp.business.user.persistence;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import org.springframework.stereotype.Repository;
 
@@ -23,4 +24,14 @@ public class UserRepository {
 
 		return user;
 	}
+	
+    public User findUserByName(final String username) {
+        final Query query = em.createQuery("FROM User u WHERE u.username = :username");
+        query.setParameter("username", username);
+        final User foundUser = (User) query.getSingleResult();
+        if (foundUser == null) {
+            throw new IllegalArgumentException("Unknown User");
+        }
+        return foundUser;
+    }
 }
